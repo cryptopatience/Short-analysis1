@@ -338,7 +338,7 @@ def calculate_short_score(row):
     else: return 5
 
 # ==================== 메인 앱 ====================
-st.title("🌟 MAGNIFICENT SEVEN + BITCOIN "Short" EXPOSURE 종합 분석")
+st.title("🌟 MAGNIFICENT SEVEN + BITCOIN Short EXPOSURE 종합 분석")
 st.markdown(f"**데이터 수집 시간:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')} (KST)")
 
 # 사이드바
