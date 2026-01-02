@@ -146,11 +146,16 @@ def get_quarterly_vwap_analysis(ticker):
         quarter_num = (quarter_start.month - 1) // 3 + 1
 
         stock = yf.Ticker(ticker)
-        df = stock.history(start=quarter_start, end=end_date)
+        
+        # history 호출 시 예외 처리 강화
+        try:
+            df = stock.history(start=quarter_start, end=end_date)
+        except Exception:
+            return None
 
         if df.empty or len(df) < 5:
             return None
-
+         
         df = calculate_anchored_vwap(df)
 
         current_price = df['Close'].iloc[-1]
@@ -368,6 +373,9 @@ def collect_all_data():
     
     for idx, ticker in enumerate(mag7_tickers):
         status_text.text(f"분석 중: {ticker} ({MAG7_STOCKS[ticker]['name']})...")
+
+        # [수정 1] 요청 간 딜레이 추가 (Yahoo Finance 차단 방지)
+        time.sleep(1.5)  # 1.5초 대기
         
         # VWAP 분석
         result = get_quarterly_vwap_analysis(ticker)
@@ -375,6 +383,8 @@ def collect_all_data():
             results.append(result)
         
         # 공매도 데이터 (Yahoo Finance + FINRA 통합)
+        # [수정 2] 연속 호출 방지를 위해 여기도 딜레이
+        time.sleep(0.5)
         short_data = get_comprehensive_short_data(ticker)
         if short_data:
             short_data_list.append(short_data)
@@ -385,10 +395,15 @@ def collect_all_data():
     progress_bar.empty()
     
     df_results = pd.DataFrame(results)
+    # [수정 3] 데이터가 하나도 없을 경우 에러 처리 (빈 데이터프레임 오류 방지)
+    if df_results.empty:
+        st.error("❌ 데이터 수집에 실패했습니다. (Too Many Requests). 잠시 후 다시 시도하거나, 로컬 환경에서 실행해 보세요.")
+        return pd.DataFrame() # 빈 데이터프레임 반환하여 앱 충돌 방지
     df_short = pd.DataFrame(short_data_list)
     
     # 매수 신호 점수 계산
     df_results['Buy_Signal_Score'] = df_results.apply(calculate_buy_score, axis=1)
+    
     df_results['Market_Cap_Trillion'] = (df_results['Market_Cap'] / 1e12).round(3)
     
     # 공매도 데이터 병합
@@ -892,7 +907,10 @@ def main():
             st.session_state['analysis_data'] = collect_all_data()
     
     df_results = st.session_state['analysis_data']
-    
+    # [수정 4] 데이터가 비어있으면 중단
+    if df_results is None or df_results.empty:
+        st.warning("데이터를 불러오지 못했습니다. '데이터 새로고침' 버튼을 눌러주세요.")
+        st.stop()
     # ==================== 페이지 1: 대시보드 ====================
     if page == "🏠 대시보드":
         # 상단 지표
