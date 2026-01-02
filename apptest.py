@@ -81,15 +81,31 @@ def check_password():
                 submit_btn = st.form_submit_button("🔓 로그인", type="primary", use_container_width=True)
             
         if submit_btn:
-            # 실제 환경에서는 st.secrets 사용
-            # 데모용 하드코딩된 사용자 정보
-            DEMO_USERS = {
-                "admin": "admin123",
-                "bomi": "quant2025",
-                "demo": "demo"
-            }
+            # secrets.toml에서 사용자 정보 읽기
+            try:
+                # st.secrets에서 passwords 섹션 가져오기
+                USERS = dict(st.secrets.get("passwords", {}))
+                
+                # 사용자 정보가 없으면 기본값 사용
+                if not USERS:
+                    USERS = {
+                        "admin": "admin123",
+                        "bomi": "quant2025",
+                        "demo": "demo"
+                    }
+                    st.warning("⚠️ secrets.toml 파일을 찾을 수 없어 기본 계정을 사용합니다.")
+                
+            except Exception as e:
+                # secrets.toml이 없는 경우 기본값
+                USERS = {
+                    "admin": "admin123",
+                    "bomi": "quant2025",
+                    "demo": "demo"
+                }
+                st.warning("⚠️ 설정 파일 오류. 기본 계정을 사용합니다.")
             
-            if username in DEMO_USERS and password == DEMO_USERS[username]:
+            # 로그인 검증
+            if username in USERS and password == USERS[username]:
                 st.session_state['password_correct'] = True
                 st.session_state['username'] = username
                 st.success("✅ 로그인 성공! 대시보드로 이동합니다...")
@@ -98,7 +114,15 @@ def check_password():
             else:
                 st.error("😕 아이디 또는 비밀번호가 올바르지 않습니다.")
         
-        st.info("💡 데모 계정: admin / admin123")
+        # 사용 가능한 계정 표시
+        try:
+            if st.secrets.get("passwords"):
+                available_users = list(st.secrets["passwords"].keys())
+                st.info(f"💡 등록된 계정: {', '.join(available_users)}")
+            else:
+                st.info("💡 데모 계정: admin / admin123")
+        except:
+            st.info("💡 데모 계정: admin / admin123")
     
     return False
 
