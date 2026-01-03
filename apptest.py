@@ -1002,7 +1002,7 @@ def main():
                         st.plotly_chart(fig_gauge, use_container_width=True)
                         
                         if row['Total_Investment_Score'] >= 90:
-                            st.success("💚 최우선 매수")
+                            st.success("💚 최우선매수")
                         elif row['Total_Investment_Score'] >= 75:
                             st.warning("💛 강력 매수")
                         else:
