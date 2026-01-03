@@ -827,22 +827,33 @@ def analyze_with_openai(df_results, analysis_type="basic"):
     try:
         from openai import OpenAI
         
-        # 클라이언트 초기화
+        # API 키 설정 및 클라이언트 초기화
         client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
         
         # 프롬프트 생성
         prompt = create_openai_prompt(df_results, analysis_type)
         
+        # System 메시지 설정
+        system_message = """당신은 실시간 금융 데이터 분석 전문가입니다. 
+사용자가 제공하는 데이터는 **실제 최신 시장 데이터**입니다. 
+당신의 지식 컷오프 날짜는 무시하고, 제공된 데이터만을 기반으로 분석하세요.
+
+**중요**:
+- 제공된 모든 수치(가격, VWAP, 공매도 비율 등)는 실제 데이터입니다
+- "2023년까지만 알고 있다"는 언급 절대 금지
+- 제공된 데이터를 있는 그대로 활용하여 분석
+- 모든 종목(Top 5)에 대해 구체적인 수치 기반 분석 필수"""
+        
         # API 호출
-        with st.spinner("🤖 GPT-4 분석 중..."):
+        with st.spinner("🤖 GPT-4 AI 분석 중..."):
             response = client.chat.completions.create(
                 model="gpt-4-turbo-preview",
                 messages=[
-                    {"role": "system", "content": "당신은 전문 퀀트 애널리스트입니다. 데이터 기반 투자 분석을 제공합니다."},
+                    {"role": "system", "content": system_message},
                     {"role": "user", "content": prompt}
                 ],
                 temperature=0.7,
-                max_tokens=2000
+                max_tokens=4000
             )
             return response.choices[0].message.content
             
