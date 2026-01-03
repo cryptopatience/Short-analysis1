@@ -852,7 +852,8 @@ def analyze_with_openai(df_results, analysis_type="basic"):
                     {"role": "system", "content": system_message},
                     {"role": "user", "content": prompt}
                 ],
-                
+                temperature=1.0,
+                max_tokens=16000
             )
             return response.choices[0].message.content
             
