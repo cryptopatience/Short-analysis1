@@ -1,6 +1,6 @@
 """
-MAG 7+2 Quant Dashboard - Streamlit App
-Magnificent Seven + Bitcoin Exposure 종합 분석 대시보드
+MAG 7+2 공매도 분석 - Streamlit App
+Magnificent Seven + Bitcoin 공매도 분석
 - 로그인 시스템
 - Gemini/OpenAI AI 분석 (기본/Deep Dive)
 - Advanced Quant Chatbot
@@ -41,8 +41,8 @@ def check_password():
     if st.session_state.get('password_correct', False):
         return True
     
-    st.title("🔒 MAG 7+2 Quant Dashboard")
-    st.markdown("### MAG 7+2 Quant 분석")
+    st.title("🔒 MAG 7+2 공매도분석")
+    st.markdown("### MAG 7+2 공매도 분석")
     
     with st.form("credentials"):
         username = st.text_input("아이디 (ID)", key="username")
