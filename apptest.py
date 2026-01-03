@@ -1317,8 +1317,8 @@ def main():
         }
         </style>
         <div class="main-header">
-            <div class="main-title">🚀 MAG 7+2 Quant Dashboard</div>
-            <div class="main-subtitle">Magnificent Seven + Bitcoin Exposure AI-Powered Analysis</div>
+            <div class="main-title">🚀 MAG 7+2 공매도 분석</div>
+            <div class="main-subtitle">Magnificent Seven + Bitcoin Short Exposure AI-Powered Analysis</div>
         </div>
     """, unsafe_allow_html=True)
     
