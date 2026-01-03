@@ -999,7 +999,7 @@ def main():
                             }
                         ))
                         fig_gauge.update_layout(height=200, margin=dict(l=20, r=20, t=40, b=20))
-                        st.plotly_chart(fig_gauge, use_container_width=True)
+                        st.plotly_chart(fig_gauge, use_container_width=True,key=f"gauge_{row['Ticker']}")
                         
                         if row['Total_Investment_Score'] >= 90:
                             st.success("💚 최우선매수")
