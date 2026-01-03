@@ -964,12 +964,9 @@ def create_openai_prompt(df_results, analysis_type):
     
     else:  # deep dive
         prompt = f"""
-당신은 Bridgewater Associates, Renaissance Technologies, Citadel 출신의 전설적인 퀀트 애널리스트입니다. 
+당신은 퀀트 애널리스트입니다. 
 25년간 기술주 포트폴리오 관리와 알고리즘 트레이딩 전략 개발을 해왔으며, 
 MAG 7 종목들과 비트코인 관련 자산에 대한 깊은 통찰력을 보유하고 있습니다.
-
-현재는 글로벌 헤지펀드의 Chief Investment Officer로서 
-$50B AUM의 기술주 롱숏 전략을 총괄하고 있습니다.
 
 다음 데이터를 바탕으로 **기관투자자 수준의 심층 분석 리포트**를 작성하세요.
 
